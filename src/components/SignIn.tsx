@@ -12,7 +12,7 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme } from '@mui/material/styles';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
 
 interface LoginFormState {
@@ -23,29 +23,44 @@ interface LoginFormState {
 const defaultTheme = createTheme();
 
 export default function SignIn() {
+    const [data, setData] = useState<any>()
     const [formData, setFormData] = useState<LoginFormState> ({
         username: '',
         password: '',
     });
     const [error, setError] = useState<string | null>(null);
 
-    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    useEffect(() => {
+        const fetchData = async () => {
+            await axios
+                .get('http://localhost:5074/api/Department')
+                .then(function (resp) {
+                    console.log(resp.data)
+                    setData(resp.data)
+                })
+                .catch(function (error) {
+                    console.log(error)
+                })
+        }
+        fetchData()
+    }, [])
+
+    const handleSubmit = async (event:React.FormEvent) => {
         event.preventDefault();
-        // try {
-        //     const response = await axios.post('/api/login', );
+        const newEmployee = {
+            name: "Tom543",
+            age: "20"
+        };
+        try {
+            const response = await axios.post('http://localhost:5074/api/Run', formData);
 
-        //     if (response.status === 200) {
-        //         console.log('Успешно')
-        //     }
-        // } catch (error) {
-        //     setError('Ошибка при авторизации. Пожалуйста, проверьте имя пользователя и пароль.')
-        // }
-
-        const data = new FormData(event.currentTarget);
-        console.log({
-             email: data.get('email'),
-             password: data.get('password'),
-        });
+            if (response.status === 206) {
+                console.log('OK')
+                console.log(response)
+            }
+        } catch (error) {
+            setError('Error')
+        }
     };
 
     return (
@@ -73,7 +88,7 @@ export default function SignIn() {
                         <Typography component="h1" variant="h5">
                             Войти
                         </Typography>
-                        <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+                        <Box component="form"  noValidate sx={{ mt: 1 }}>
                             <TextField
                                 margin="normal"
                                 required
@@ -103,6 +118,7 @@ export default function SignIn() {
                                 fullWidth
                                 variant="contained"
                                 sx={{ mt: 3, mb: 2 }}
+                                onClick={handleSubmit}
                             >
                                 Войти
                             </Button>

@@ -1,0 +1,2 @@
+C:\Users\user\source\repos\uwp_back\uwp-front\obj\Debug\uwp-front.esproj.SuggestedBindingRedirects.cache
+C:\Users\user\source\repos\uwp_back\uwp-front\obj\Debug\uwp-front.esproj.CoreCompileInputs.cache
